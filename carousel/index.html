@@ -29,19 +29,16 @@
   <body>
     <div id="component-carousel">
       <ul>
-        <li><img src="https://easyread.nosdn.127.net/pic2017100155a5cfbda07b47068d23dea6538abb3e.jpg?imageView=&type=webp&thumbnail=750y421&quality=90"></li>
-        <li><img src="https://easyread.nosdn.127.net/pic201710312771f94a893d4458b7135659f411b6b4.jpg?imageView=&type=webp&thumbnail=750y421&quality=90"></li>
-        <li><img src="https://easyread.nosdn.127.net/pic2017100155a5cfbda07b47068d23dea6538abb3e.jpg?imageView=&type=webp&thumbnail=750y421&quality=90"></li>
-        <li><img src="https://easyread.nosdn.127.net/pic201710312771f94a893d4458b7135659f411b6b4.jpg?imageView=&type=webp&thumbnail=750y421&quality=90"></li>
-        <li><img src="https://easyread.nosdn.127.net/pic2017100155a5cfbda07b47068d23dea6538abb3e.jpg?imageView=&type=webp&thumbnail=750y421&quality=90"></li>
+        <li><img src="../images/1.webp"></li>
+        <li><img src="../images/2.webp"></li>
       </ul>
-      <button>左移</button>
     </div>
     <script src="../dist/carousel.js"></script>
     <script>
       var c = new Carousel({
           root: 'component-carousel',
-          speed: 300
+          speed: 300,
+          interval: 3000
       })
     </script>
   </body>
