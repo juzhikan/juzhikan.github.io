@@ -79,7 +79,7 @@ var _RAF = window.requestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
     window.msRequestAnimationFrame ||
     window.oRequestAnimationFrame ||
-    function (cb) { return setTimeout(cb, 17) }
+    function (cb) { return setTimeout(cb, 2) }
 
 var _CAF = window.cancelAnimationFrame ||
     window.mozCancelAnimationFrame ||
