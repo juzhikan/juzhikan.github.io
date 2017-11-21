@@ -2,91 +2,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://easyread.nosdn.127.net/web/trunk/1510540164821/base.css">
+    <script src="https://easyread.nosdn.127.net/web/trunk/1510539795459/rem.min.js"></script>
     <title>雪花效果 - by ghostwu</title>
     <!-- <script src="lib.js"></script> -->
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            overflow: hidden;
+        #dm-screen {
+            height: 200px;
+            position: relative;
         }
     </style>
 </head>
-
 <body>
+    <div id="dm-main">
+        <div id="dm-screen"></div>
+    </div>
+    <button>pause</button>
+    <button>resume</button>
+    <script src="./index.js"></script>
     <script>
-        window.onload = function () {
-            var Canvas = function (w, h) {
-                this.width = w;
-                this.height = h;
-            }
-            Canvas.prototype = {
-                init: function () {
-                    var oC = document.createElement("canvas");
-                    oC.setAttribute('width', this.width);
-                    oC.setAttribute('height', this.height);
-                    oC.setAttribute('id', 'canvas');
-                    oC.style.backgroundColor = '#000';
-                    document.body.appendChild(oC);
-                }
-            }
-            var curWinWidth = window.innerWidth,
-                curWinHeight = window.innerHeight;
-            var oCanvas = new Canvas(curWinWidth, curWinHeight);
-            oCanvas.init();
-
-            var oC = document.querySelector('#canvas');
-            var width = oC.width, height = oC.height, oGc = oC.getContext('2d');
-
-            function random(min, max) {
-                return Math.random() * (max - min) + min;
-            }
-            var Snow = function () {
-
-            }
-            Snow.prototype = {
-                init: function () {
-                    this.x = random(0, width);
-                    this.y = 0;
-                    this.r = random(1, 5);
-                    this.vy = random(3, 5);
-                },
-                draw: function (cxt) {
-                    cxt.beginPath();
-                    cxt.fillStyle = 'white';
-                    cxt.arc(this.x, this.y + this.r, this.r, 0, Math.PI * 2, false);
-                    cxt.fill();
-                    cxt.closePath();
-                    this.update(cxt);
-                },
-                update: function (cxt) {
-                    if (this.y < height - this.r) {
-                        this.y += this.vy;
-                    } else {
-                        this.init();
-                    }
-                }
-            }
-
-            var snow = [];
-            for (var i = 0; i < 500; i++) {
-                setTimeout(function () {
-                    var oSnow = new Snow();
-                    oSnow.init();
-                    snow.push(oSnow);
-                }, 10 * i);
-            }
-
-            (function move() {
-                oGc.clearRect(0, 0, width, height);
-                for (var i = 0; i < snow.length; i++) {
-                    snow[i].draw(oGc);
-                }
-                requestAnimationFrame(move);
-            })();
+        var damoo = new Damoo('dm-screen', 'dm-canvas', 50, "Arial")
+        
+        damoo.play()
+        
+        damoo.emit({ text: "Damoo is awesome!", color: "#f49" })
+        
+        document.querySelectorAll('button')[0].onclick = function () {
+            /* damoo.emit({ text: "xxxxxxxxx", color: "#f49" }) */
+            damoo.pause()
+        }
+        document.querySelectorAll('button')[1].onclick = function () {
+            damoo.emit({ text: "xxxxxxxxx", color: "#f49" })
         }
     </script>
 </body>
