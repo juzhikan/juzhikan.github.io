@@ -21,11 +21,15 @@
         <canvas></canvas>
     </div>
     <div>
+        <div id="item2">lalalalla2</div>
+    </div>
+    <div>
         <div id="item">lalalalla</div>
     </div>
     <button>pause</button>
     <button>resume</button>
     <!-- <script src="../dist/damoo.js"></script> -->
+    <script src="../dist/TweenMax.min.js"></script>
     <script src="./index.js"></script>
     <script>
         /* var damoo = new Damoo('dm-screen', 'dm-canvas', 50, "Arial")
@@ -33,28 +37,11 @@
         damoo.play()
         
         damoo.emit({ text: "Damoo is awesome!", color: "#f49" }) */
-        var y = 0
-        var x = 0
-        function draw () {
-            var ctx = document.querySelector('canvas').getContext('2d');
-            ctx.globalCompositeOperation = 'destination-over';
-            ctx.clearRect(0,0,300,300); // clear canvas
-
-            ctx.fillStyle = 'rgba(0,0,0,0.4)';
-            ctx.strokeStyle = 'rgba(0,153,255,0.4)';
-            ctx.font = 12
-            ctx.textAlign = 'start'
-            ctx.textBaseline = 'top'
-            ctx.shadowOffsetX = 1
-            ctx.shadowOffsetY = 1
-            ctx.shadowColor = '#fff'
-            ctx.fillStyle = '#f49'
-            ctx.fillText('testtestest', x++, y)
-
-            window.requestAnimationFrame(draw);
-        }
-
-        draw()
+        TweenMax.fromTo('#item2', 3, {
+            x: 0
+        }, {
+            x: 370
+        })
         
         document.querySelectorAll('button')[0].onclick = function () {
             /* damoo.emit({ text: "xxxxxxxxx", color: "#f49" }) */
