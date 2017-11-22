@@ -14,26 +14,35 @@ function Damoo (options) {
 }
 
 Damoo.prototype.load = function (bullet) {
-    var isLiteral = typeof bullet === 'string'
-    if (!bullet || (!isLiteral && !bullet.text)) {
-        throw new Error('bullet is necessary!')
-        return
+    if (!bullet) return
+    bullet = Object.prototype.toString.call(bullet) === '[object Array]' ? bullet : [ bullet ]
+
+    for (var i = 0; i < bullet.length; i++) {
+        var ele = bullet[i]
+        var isLiteral = typeof ele === 'string'
+        if (!isLiteral && !bullet.text) {
+            throw new Error('The text attribute is required！')
+            return
+        }
+        bullet[i] = (isLiteral && { text: ele }) || ele
+        
+        this.pool.load(new Bullet(bullet[i]))
     }
-
-    bullet = (isLiteral && { text: bullet }) || bullet
-
-    this.pool.load(new Bullet(bullet))
 }
 
 Damoo.prototype.flowOut = function () {
-    var bulletDom = document.createElement('div')
-    var bullet = this.pool.getLoaded()
-    for (var key in bullet) {
-        var quote = key === 'textContent' ? bulletDom : bulletDom.style
-        quote[key] = bullet[key]
+
+    while (this.pool.getAmount()) {
+        var bullet = this.pool.getLoaded()
+        var bulletDom = document.createElement('div')
+
+        for (var key in bullet) {
+            var quote = key === 'textContent' ? bulletDom : bulletDom.style
+            quote[key] = bullet[key]
+        }
+        this.container.appendChild(bulletDom)
+        this.track.addTrack(bulletDom)
     }
-    this.container.appendChild(bulletDom)
-    this.track.addTrack(bulletDom)
 }
 
 
@@ -57,21 +66,54 @@ function Bullet (blt) {
 function Track (num, height) {
     this.num = num
     this.height = height
-    this.Tracks = new Array(this.num)
+    this.records = new Array(this.num)
 }
 
-Track.prototype.addTrack = function (bullet) {
-    var t = getRandom(0, this.num - 1)
-    var top = t*this.height
-    if (this.Tracks[t]) {
-        this.Tracks[t].push(bullet)
-    } else {
-        this.Tracks[t] = [ bullet ]
+Track.prototype.getValidTrackIndex = function () {
+    var records = this.records
+    for (var index = 0; index < records.length; index++) {
+        var record = records[index]
+        if (!record || getDistance(record) < 375) return index
     }
-    bullet.style.transition = 'transform 3s linear'
+    return false
+}
+
+function getDistance (blt) {
+    return parseInt(blt.style.transform.match(/translateX\((-?\d+)px\)/)[1], 10) + blt.clientWidth
+}
+
+Track.prototype.addTrack = function (bullet, index) {
+    var trackIndex = index !== undefined ? index : getRandom(0, this.num - 1)
+    trackIndex = trackIndex || 0
+    var top = trackIndex*this.height
+
+    /* 弹幕是否能放到当前轨道中，不能的话另寻轨道，能的话计算速度 */
+    var record = this.records[trackIndex]
+    if (record) {
+        var distance = getDistance(record)
+        if (distance > 375) {
+            console.log('轨道冲突')
+            trackIndex = this.getValidTrackIndex()
+            this.addTrack(bullet, trackIndex)
+            return
+        } else if (distance > 0) {
+            /* 可以放入，需要计算时间 */
+            bullet_v = (((375 + record.clientWidth ) / 3) * 375)/distance
+            bullet_t = (bullet.clientWidth + 375)/bullet_v
+            bullet_t = bullet_t < 1.5 ? 1.5 : bullet_t
+            this.shoot(bullet, bullet_t, trackIndex, top)
+            return
+        }
+    }
+    this.shoot(bullet, 3, trackIndex, top)
+}
+
+Track.prototype.shoot = function (bullet, time, trackIndex,  top) {
+    this.records[trackIndex] = bullet
+    bullet.style.transition = 'transform ' + time + 's linear'
     bullet.style.top = top + 'px'
     requestAnimationFrame(function () {
-        bullet.style.transform = 'translateX(0)'
+        bullet.style.transform = 'translateX(' + -bullet.clientWidth + 'px)'
     })
 }
 
@@ -85,7 +127,11 @@ Pool.prototype.load = function (bullet) {
 }
 
 Pool.prototype.getLoaded = function (d) {
-    return this.bullets.pop()
+    return this.bullets.length && this.bullets.shift()
+}
+
+Pool.prototype.getAmount = function (d) {
+    return this.bullets.length
 }
 
 Pool.prototype.empty = function () {
