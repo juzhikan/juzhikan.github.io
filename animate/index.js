@@ -43,7 +43,10 @@ Damoo.prototype.flowOut = function () {
     while (this.pool.getAmount() && this.track.getValidTrackIndex() !== false && limit > 0) {
         var bullet = this.pool.getLoaded()
         var bulletDom = document.createElement('div')
-
+        bulletDom.addEventListener('transitionend', function (event) {
+            var target = event.currentTarget
+            target.parentNode.removeChild(target)
+        })
         for (var key in bullet) {
             var quote = key === 'textContent' ? bulletDom : bulletDom.style
             quote[key] = bullet[key]
@@ -92,7 +95,9 @@ Track.prototype.getValidTrackIndex = function () {
 }
 
 function getDistance (blt) {
-    return parseInt(blt.style.transform.match(/translateX\((-?\d+)px\)/)[1], 10) + blt.clientWidth
+    var transform = getStyle(blt, 'transform')
+    var translatex = transform.replace('matrix(', '').replace(')','').split(',')[4].replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '')
+    return parseFloat(translatex) + blt.clientWidth
 }
 
 Track.prototype.addTrack = function (bullet, index) {
@@ -109,10 +114,15 @@ Track.prototype.addTrack = function (bullet, index) {
             trackIndex = this.getValidTrackIndex()
             this.addTrack(bullet, trackIndex)
             return
-        } else if (distance > 0) {
+        } else if (distance >= 0) {
+            console.log(distance)
             /* 可以放入，需要计算时间 */
-            bullet_v = (((375 + record.clientWidth ) / 3) * 375)/distance
+            bullet_v = (((375 + record.clientWidth) / 3) * 375)/distance
+            console.log(record.clientWidth)
+            console.log(bullet_v)
             bullet_t = (bullet.clientWidth + 375)/bullet_v
+            
+            console.log(bullet_t)
             bullet_t = bullet_t < 1.5 ? 1.5 : bullet_t
             this.shoot(bullet, bullet_t, trackIndex, top)
             return
@@ -121,7 +131,7 @@ Track.prototype.addTrack = function (bullet, index) {
     this.shoot(bullet, 3, trackIndex, top)
 }
 
-Track.prototype.shoot = function (bullet, time, trackIndex,  top) {
+Track.prototype.shoot = function (bullet, time, trackIndex, top) {
     this.records[trackIndex] = bullet
     bullet.style.transition = 'transform ' + time + 's linear'
     bullet.style.top = top + 'px'
