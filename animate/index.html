@@ -28,11 +28,11 @@
     <!-- <script src="../dist/damoo.js"></script> -->
     <script src="./index.js"></script>
     <script>
-        var damoo = new Damoo('dm-screen', 'dm-canvas', 50, "Arial")
+        /* var damoo = new Damoo('dm-screen', 'dm-canvas', 50, "Arial")
         
         damoo.play()
         
-        damoo.emit({ text: "Damoo is awesome!", color: "#f49" })
+        damoo.emit({ text: "Damoo is awesome!", color: "#f49" }) */
         
         document.querySelectorAll('button')[0].onclick = function () {
             /* damoo.emit({ text: "xxxxxxxxx", color: "#f49" }) */
@@ -41,7 +41,9 @@
         document.querySelectorAll('button')[1].onclick = function () {
             damoo.emit({ text: "xxxxxxxxx", color: "#f49" })
         }
+        requestAnimationFrame(function () {
+            document.querySelector('#item').style.transform = "translate(370px, 0px) translateZ(0px)"
+        })
         
-        document.querySelector('#item').style.transform = "translate(370px, 0px) translateZ(0px)"
     </script>
 </body>
