@@ -7,7 +7,7 @@
     <title>雪花效果 - by ghostwu</title>
     <!-- <script src="lib.js"></script> -->
     <style>
-        canvas {
+        #dm-main {
             height: 200px;
             position: relative;
         }
@@ -18,7 +18,7 @@
 </head>
 <body>
     <div id="dm-main">
-        <canvas></canvas>
+        
     </div>
     <div>
         <div id="item2">lalalalla2</div>
@@ -32,17 +32,14 @@
     <script src="../dist/TweenMax.min.js"></script>
     <script src="./index.js"></script>
     <script>
-        /* var damoo = new Damoo('dm-screen', 'dm-canvas', 50, "Arial")
-        
-        damoo.play()
-        
-        damoo.emit({ text: "Damoo is awesome!", color: "#f49" }) */
-        TweenMax.fromTo('#item2', 3, {
-            x: 0
-        }, {
-            x: 370
+        var damoo = new Damoo({
+            container: 'dm-main'
         })
         
+        damoo.load('这是一条测试弹幕')
+
+        damoo.flowOut()
+
         document.querySelectorAll('button')[0].onclick = function () {
             /* damoo.emit({ text: "xxxxxxxxx", color: "#f49" }) */
             damoo.pause()
