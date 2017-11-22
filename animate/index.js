@@ -8,9 +8,17 @@
 
 function Damoo (options) {
     var opt = options || {}
-    this.container = getElement(opt.container)
+    var container = this.container = getElement(opt.container)
+    container.style.overflow = 'hidden'
+
+    this.fontSize = opt.fontSize || 14
+    this.width = parseFloat(getStyle(container, 'width'))
+    this.height = parseFloat(getStyle(container, 'height'))
+
+    this.trackNum = Math.floor(this.height/this.fontSize)
+
     this.pool = new Pool()
-    this.track = new Track(3, 14)
+    this.track = new Track(this.trackNum, this.fontSize)
 }
 
 Damoo.prototype.load = function (bullet) {
@@ -31,8 +39,8 @@ Damoo.prototype.load = function (bullet) {
 }
 
 Damoo.prototype.flowOut = function () {
-
-    while (this.pool.getAmount()) {
+    var limit = 4
+    while (this.pool.getAmount() && this.track.getValidTrackIndex() !== false && limit > 0) {
         var bullet = this.pool.getLoaded()
         var bulletDom = document.createElement('div')
 
@@ -42,7 +50,12 @@ Damoo.prototype.flowOut = function () {
         }
         this.container.appendChild(bulletDom)
         this.track.addTrack(bulletDom)
+        limit--
     }
+    var self = this
+    setTimeout(function () {
+        self.flowOut()
+    }, 1000)
 }
 
 
@@ -165,4 +178,16 @@ function getStyle (ele, prop) {
       }
   }
   return parseFloat((ele.currentStyle && ele.currentStyle[propBridge]) || getComputedStyle(ele, null)[prop])
+}
+
+function getStyle (ele, prop) {
+    var result = prop.match(/[A-Z]/g)
+    if (!ele.currentStyle && result) {
+        var propBridge = prop
+        for (var i = 0; i < result.length; i++) {
+            var upperCase = result[i]
+            propBridge = propBridge.replace(upperCase, '-' + upperCase.toLowerCase())
+        }
+    }
+    return (ele.currentStyle && ele.currentStyle[propBridge]) || getComputedStyle(ele, null)[prop]
 }
