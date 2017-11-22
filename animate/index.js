@@ -21,10 +21,10 @@ Damoo.prototype.emit = function (d) {
   }
   var cvs = _preload(d, this.canvas.font)
   this.thread.push({
-      canvas: cvs,
+      text: d.text,
       fixed: d.fixed,
       index: this.thread.index,
-      speed: Math.pow(cvs.width, 1 / 3) * 0.6,
+      speed: Math.pow(30, 1 / 3) * 0.6,
       offset: {
           x: this.canvas.width,
           y: this.canvas.font.size * this.thread.index
@@ -96,8 +96,8 @@ function _render () {
             x = d.offset.x,
             y = d.offset.y
         this.canvas.draw(d, x, y)
-        d.offset.x -= d.speed
-        if (x <= -d.canvas.width) {
+        d.offset.x -= 2
+        if (x <= -30) {
             this.thread.remove(i)
         }
     }
@@ -136,10 +136,17 @@ Canvas.prototype.clear = function () {
 }
 
 Canvas.prototype.draw = function (t, x, y) {
-  if (t.fixed) {
+    if (t.fixed) {
       x = (this.width - t.canvas.width) / 2
-  }
-  this.ctx.drawImage(t.canvas, x, y)
+    }
+    this.ctx.font = 12
+    this.ctx.textAlign = 'start'
+    this.ctx.textBaseline = 'top'
+    this.ctx.shadowOffsetX = 1
+    this.ctx.shadowOffsetY = 1
+    this.ctx.shadowColor = '#fff'
+    this.ctx.fillStyle = '#f49'
+    this.ctx.fillText(t.text, x, y)
 }
 
 
