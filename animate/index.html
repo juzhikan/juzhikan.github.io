@@ -37,20 +37,28 @@
             fontSize: 14
         })
         
-        damoo.load(['这是一条测试弹幕', '老铁双击666', '啊', '我爱你', '你大爷的', '0202020020200', '啊哈', '嘿嘿嘿'])
+        damoo.load([
+            '起飞的斧子获得xxxxxxxx', 
+            '起飞的斧子获得5000元现金', 
+            '起飞的斧子获得鹿娘保温杯3个', 
+            '起飞的斧子获得鹿娘保温杯4个',
+            '起飞的斧子获得会员VIP一个月', 
+            '起飞的斧子获得5000元现金', 
+            '起飞的斧子获得鹿娘保温杯一个', 
+            '起飞的斧子获得鹿娘保温杯一个', 
+            '起飞的斧子获得5000元现金', 
+            '起飞的斧子获得鹿娘保温杯一个', 
+            '起飞的斧子获得5000元现金', 
+            '起飞的斧子获得鹿娘保温杯一个', 
+            '起飞的斧子获得5000元现金', 
+            '起飞的斧子获得鹿娘保温杯一个', 
+            '起飞的斧子获得鹿娘保温杯一个', 
+            '起飞的斧子获得5000元现金', 
+            '起飞的斧子获得鹿娘保温杯一个', 
+            '起飞的斧子获得5000元现金', 
+            '起飞的斧子获得鹿娘保温杯一个'])
 
         damoo.flowOut()
-
-        document.querySelectorAll('button')[0].onclick = function () {
-            /* damoo.emit({ text: "xxxxxxxxx", color: "#f49" }) */
-            damoo.pause()
-        }
-        document.querySelectorAll('button')[1].onclick = function () {
-            damoo.emit({ text: "xxxxxxxxx", color: "#f49" })
-        }
-        requestAnimationFrame(function () {
-            document.querySelector('#item').style.transform = "translate(370px, 0px) translateZ(0px)"
-        })
         
     </script>
 </body>

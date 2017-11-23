@@ -39,28 +39,36 @@ Damoo.prototype.load = function (bullet) {
 }
 
 Damoo.prototype.flowOut = function () {
-    var limit = 4
-    while (this.pool.getAmount() && this.track.getValidTrackIndex() !== false && limit > 0) {
-        var bullet = this.pool.getLoaded()
-        var bulletDom = document.createElement('div')
-        bulletDom.addEventListener('transitionend', function (event) {
-            var target = event.currentTarget
-            target.parentNode.removeChild(target)
-        })
-        for (var key in bullet) {
-            var quote = key === 'textContent' ? bulletDom : bulletDom.style
-            quote[key] = bullet[key]
-        }
-        this.container.appendChild(bulletDom)
-        this.track.addTrack(bulletDom)
-        limit--
-    }
     var self = this
-    setTimeout(function () {
-        self.flowOut()
-    }, 1000)
+    var limit = 4
+
+    var timer = setInterval(function () {
+        if (!self.pool.getAmount()) {
+            clearInterval(timer)
+        } else if (self.track.getValidTrackIndex() !== false && limit > 0) {
+            var bullet = self.pool.getLoaded()
+            var bulletDom = document.createElement('div')
+            bulletDom.addEventListener('transitionend', function (event) {
+                var target = event.currentTarget
+                target.parentNode.removeChild(target)
+            })
+            for (var key in bullet) {
+                var quote = key === 'textContent' ? bulletDom : bulletDom.style
+                quote[key] = bullet[key]
+            }
+            self.container.appendChild(bulletDom)
+            self.track.addTrack(bulletDom)
+            limit--
+        } else {
+            clearInterval(timer)
+            setTimeout(function () {
+                self.flowOut()
+            }, 2000)
+        }
+    }, 200)
 }
 
+var color = ['#b848ff', '#48b258', '#dc4900', '#ff2525', '#48b258']
 
 function Bullet (blt) {
     
@@ -74,8 +82,8 @@ function Bullet (blt) {
     this.fontSize = 14
     this.fontFamily = 'sans-serif'
     this.textShadow = 'rgb(0, 0, 0) 1px 1px 2px'
-    this.opacity = 0.7
-    this.color = 'rgb(255, 255, 255)'
+    this.opacity = 1
+    this.color = color[getRandom(0, 4)]
 }
 
 /* 弹轨控制 */
@@ -96,6 +104,7 @@ Track.prototype.getValidTrackIndex = function () {
 
 function getDistance (blt) {
     var transform = getStyle(blt, 'transform')
+    if (!transform) return 0
     var translatex = transform.replace('matrix(', '').replace(')','').split(',')[4].replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '')
     return parseFloat(translatex) + blt.clientWidth
 }
@@ -115,20 +124,16 @@ Track.prototype.addTrack = function (bullet, index) {
             this.addTrack(bullet, trackIndex)
             return
         } else if (distance >= 0) {
-            console.log(distance)
             /* 可以放入，需要计算时间 */
-            bullet_v = (((375 + record.clientWidth) / 3) * 375)/distance
-            console.log(record.clientWidth)
-            console.log(bullet_v)
-            bullet_t = (bullet.clientWidth + 375)/bullet_v
+            bullet_v = (((375 + record.clientWidth) / 6) * 375)/distance
+            bullet_t = (bullet.clientWidth + 385)/bullet_v
             
-            console.log(bullet_t)
-            bullet_t = bullet_t < 1.5 ? 1.5 : bullet_t
+            bullet_t = bullet_t < 4 ? 4 : bullet_t
             this.shoot(bullet, bullet_t, trackIndex, top)
             return
         }
     }
-    this.shoot(bullet, 3, trackIndex, top)
+    this.shoot(bullet, 6, trackIndex, top)
 }
 
 Track.prototype.shoot = function (bullet, time, trackIndex, top) {
