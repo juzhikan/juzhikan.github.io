@@ -68,7 +68,7 @@ Damoo.prototype.flowOut = function () {
     }, 200)
 }
 
-var color = ['#b848ff', '#48b258', '#dc4900', '#ff2525', '#48b258']
+var color = ['#b848ff', '#48b258', '#dc4900', '#ff2525', '#48b258',]
 
 function Bullet (blt) {
     
@@ -83,7 +83,7 @@ function Bullet (blt) {
     this.fontFamily = 'sans-serif'
     this.textShadow = 'rgb(0, 0, 0) 1px 1px 2px'
     this.opacity = 1
-    this.color = color[getRandom(0, 4)]
+    this.color = 'rgb(255, 255, 255)'
 }
 
 /* 弹轨控制 */
@@ -141,7 +141,7 @@ Track.prototype.shoot = function (bullet, time, trackIndex, top) {
     bullet.style.transition = 'transform ' + time + 's linear'
     bullet.style.top = top + 'px'
     requestAnimationFrame(function () {
-        bullet.style.transform = 'translateX(' + -bullet.clientWidth + 'px)'
+        bullet.style.transform = 'translateX(' + -bullet.clientWidth + 'px) translateZ(0)'
     })
 }
 
